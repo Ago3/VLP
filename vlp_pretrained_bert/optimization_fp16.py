@@ -1,6 +1,7 @@
 # coding=utf-8
 """PyTorch optimization for BERT model."""
 
+import apex
 from apex.optimizers import FP16_Optimizer
 
 

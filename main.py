@@ -1,10 +1,11 @@
 from vlp import main
 import argparse
 
-def main():
+
+def run():
     parser = argparse.ArgumentParser()
     main(parser)
 
 
 if __name__ == '__main__':
-    main()
+    run()
