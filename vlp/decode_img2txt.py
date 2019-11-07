@@ -159,6 +159,7 @@ def main(parser=None):
         forbid_ignore_set = set(tokenizer.convert_tokens_to_ids(w_list))
     print(args.model_recover_path)
     for model_recover_path in glob.glob(args.model_recover_path.strip()):
+        print("Here")
         logger.info("***** Recover model: %s *****", model_recover_path)
         model_recover = torch.load(model_recover_path)
         model = BertForSeq2SeqDecoder.from_pretrained(args.bert_model,
@@ -170,7 +171,6 @@ def main(parser=None):
             forbid_ignore_set=forbid_ignore_set, ngram_size=args.ngram_size, min_len=args.min_len,
             enable_butd=args.enable_butd, len_vis_input=args.len_vis_input)
         del model_recover
-        print("Here")
 
         # from vlp.resnet import resnet		
         # cnn = resnet(args.resnet_model, _num_layers=101, _fixed_block=4, pretrained=True) # no finetuning
