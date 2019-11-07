@@ -159,7 +159,6 @@ def main(parser=None):
         forbid_ignore_set = set(tokenizer.convert_tokens_to_ids(w_list))
     print(args.model_recover_path)
     for model_recover_path in glob.glob(args.model_recover_path.strip()):
-        print("Here")
         logger.info("***** Recover model: %s *****", model_recover_path)
         model_recover = torch.load(model_recover_path)
         model = BertForSeq2SeqDecoder.from_pretrained(args.bert_model,
@@ -265,6 +264,7 @@ def main(parser=None):
         predictions = [{'image_id': tup[1], 'caption': output_lines[img_idx]} for img_idx, tup in enumerate(input_lines)]
 
         lang_stats = language_eval(args.dataset, predictions, args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2], args.split)
+    print("Here")
 
 
 if __name__ == "__main__":
