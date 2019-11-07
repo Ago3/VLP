@@ -43,8 +43,9 @@ def _get_max_epoch_model(output_dir):
         return None
 
 
-def main():
-    parser = argparse.ArgumentParser()
+def main(parser=None):
+    if not parser:
+        parser = argparse.ArgumentParser()
 
     # General
     parser.add_argument("--bert_model", default="bert-base-cased", type=str,
