@@ -16,9 +16,9 @@ import torch
 import random
 import pickle
 
-from pytorch_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
-from pytorch_pretrained_bert.modeling import BertForSeq2SeqDecoder
-from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
+from vlp_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
+from vlp_pretrained_bert.modeling import BertForSeq2SeqDecoder
+from vlp_pretrained_bert.optimization import BertAdam, warmup_linear
 
 from vlp.loader_utils import batch_list_to_batch_tensors
 import vlp.seq2seq_loader as seq2seq_loader

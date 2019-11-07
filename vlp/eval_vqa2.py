@@ -17,9 +17,9 @@ import random
 import pickle
 import sys
 
-from pytorch_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
-from pytorch_pretrained_bert.modeling import BertForPreTrainingLossMask
-from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
+from vlp_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
+from vlp_pretrained_bert.modeling import BertForPreTrainingLossMask
+from vlp_pretrained_bert.optimization import BertAdam, warmup_linear
 
 from misc.data_parallel import DataParallelImbalance
 from vlp.loader_utils import batch_list_to_batch_tensors

@@ -20,9 +20,9 @@ from torch.utils.data.distributed import DistributedSampler
 import random
 import copy
 
-from pytorch_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
-from pytorch_pretrained_bert.modeling import BertForPreTrainingLossMask, BertForSeq2SeqDecoder
-from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
+from vlp_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
+from vlp_pretrained_bert.modeling import BertForPreTrainingLossMask, BertForSeq2SeqDecoder
+from vlp_pretrained_bert.optimization import BertAdam, warmup_linear
 
 from vlp.loader_utils import batch_list_to_batch_tensors
 import vlp.seq2seq_loader as seq2seq_loader
@@ -414,7 +414,7 @@ def main():
     if args.fp16:
         try:
             # from apex.optimizers import FP16_Optimizer
-            from pytorch_pretrained_bert.optimization_fp16 import FP16_Optimizer_State
+            from vlp_pretrained_bert.optimization_fp16 import FP16_Optimizer_State
             from apex.optimizers import FusedAdam
         except ImportError:
             raise ImportError(
