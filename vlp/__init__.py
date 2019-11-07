@@ -1,1 +1,1 @@
-from .run_img2txt_dist import main
+from .decode_img2txt import main
