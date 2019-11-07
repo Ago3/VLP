@@ -143,7 +143,6 @@ def main(parser=None):
         amp_handle = amp.init(enable_caching=True)
         logger.info("enable fp16 with amp")
 
-    print("Here")
     # Prepare model
     cls_num_labels = 2
     type_vocab_size = 6 if args.new_segment_ids else 2
@@ -171,6 +170,7 @@ def main(parser=None):
             forbid_ignore_set=forbid_ignore_set, ngram_size=args.ngram_size, min_len=args.min_len,
             enable_butd=args.enable_butd, len_vis_input=args.len_vis_input)
         del model_recover
+    print("Here")
 
         # from vlp.resnet import resnet		
         # cnn = resnet(args.resnet_model, _num_layers=101, _fixed_block=4, pretrained=True) # no finetuning
