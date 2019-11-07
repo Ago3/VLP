@@ -1,6 +1,6 @@
 __version__ = "0.4.0"
 from . import *
-from .tokenization import BertTokenizer, BasicTokenizer, WordpieceTokenizer
+from .tokenization import BertTokenizer, BasicTokenizer, WordpieceTokenizer, WhitespaceTokenizer
 from .modeling import (BertConfig, BertModel, BertForPreTraining, BertForMaskedLM, BertForNextSentencePrediction, BertForSequenceClassification,
                        BertForMultipleChoice, BertForTokenClassification, BertForQuestionAnswering, BertForPreTrainingLossMask, BertPreTrainingPairRel, BertPreTrainingPairTransform)
 from .optimization import BertAdam, BertAdamFineTune
