@@ -16,7 +16,7 @@ import torch
 import random
 import pickle
 
-from vlp_pretrained_bert.tokenization import BertTokenizer, WhitespaceTokenizer
+from vlp_pretrained_bert import BertTokenizer, WhitespaceTokenizer
 from vlp_pretrained_bert.modeling import BertForSeq2SeqDecoder
 from vlp_pretrained_bert.optimization import BertAdam, warmup_linear
 
