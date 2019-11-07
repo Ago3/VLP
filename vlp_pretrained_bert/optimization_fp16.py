@@ -2,7 +2,7 @@
 """PyTorch optimization for BERT model."""
 
 import apex
-from apex.optimizers import FP16_Optimizer
+from apex.optimizers.contrib import FP16_Optimizer
 
 
 class FP16_Optimizer_State(FP16_Optimizer):
