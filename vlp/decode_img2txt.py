@@ -170,7 +170,7 @@ def main(parser=None):
             forbid_ignore_set=forbid_ignore_set, ngram_size=args.ngram_size, min_len=args.min_len,
             enable_butd=args.enable_butd, len_vis_input=args.len_vis_input)
         del model_recover
-    print("Here")
+        print("Here")
 
         # from vlp.resnet import resnet		
         # cnn = resnet(args.resnet_model, _num_layers=101, _fixed_block=4, pretrained=True) # no finetuning
