@@ -143,6 +143,7 @@ def main(parser=None):
         amp_handle = amp.init(enable_caching=True)
         logger.info("enable fp16 with amp")
 
+    print("Here")
     # Prepare model
     cls_num_labels = 2
     type_vocab_size = 6 if args.new_segment_ids else 2
@@ -186,7 +187,6 @@ def main(parser=None):
         torch.cuda.empty_cache()
         model.eval()
         # cnn.eval()
-        print("Here")
         eval_lst = []
         with open(args.src_file, "r", encoding='utf-8') as f_src:
             img_dat = json.load(f_src)['images']
