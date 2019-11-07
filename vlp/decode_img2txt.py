@@ -186,7 +186,7 @@ def main(parser=None):
         torch.cuda.empty_cache()
         model.eval()
         # cnn.eval()
-
+        print("Here")
         eval_lst = []
         with open(args.src_file, "r", encoding='utf-8') as f_src:
             img_dat = json.load(f_src)['images']
