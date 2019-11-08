@@ -469,7 +469,6 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")['demo/' + img_id +'.jpg'])
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")['demo/' + img_id +'.jpg'])
                     vis_pe = torch.cat((torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")['demo/' + img_id +'.jpg']), cls_label.max(dim=1)[0].unsqueeze(1)), 1)
-                    print(vis_pe.shape)
 
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
@@ -492,7 +491,8 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             rel_area = (vis_pe[:, 3]-vis_pe[:, 1])*(vis_pe[:, 2]-vis_pe[:, 0])
             rel_area.clamp_(0)
 
-            vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 5:]), -1) # confident score
+            vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 4:]), -1) # confident score
+            print(vis_pe.shape)
             normalized_coord = F.normalize(vis_pe.data[:, :5]-0.5, dim=-1)
             vis_pe = torch.cat((F.layer_norm(vis_pe, [6]), \
                 F.layer_norm(cls_label, [1601])), dim=-1) # 1601 hard coded...
