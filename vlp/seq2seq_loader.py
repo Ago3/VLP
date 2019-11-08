@@ -466,10 +466,9 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                 
                 print("Loading")
                 with open(self.region_det_file_prefix +'_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
-                    print(pickle.load(region_feat_f, encoding="bytes").keys())
-                    img = pickle.load(region_feat_f, encoding="bytes")[img_id]
-                    cls_label = pickle.load(region_cls_f, encoding="bytes")[img_id]
-                    vis_pe = pickle.load(region_bbox_f, encoding="bytes")[img_id]
+                    img = pickle.load(region_feat_f, encoding="bytes")['demo/' + img_id +'.jpg']
+                    cls_label = pickle.load(region_cls_f, encoding="bytes")['demo/' + img_id +'.jpg']
+                    vis_pe = pickle.load(region_bbox_f, encoding="bytes")['demo/' + img_id +'.jpg']
 
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
