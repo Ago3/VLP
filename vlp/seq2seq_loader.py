@@ -465,7 +465,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                 # read data from h5 files
                 
                 print("Loading")
-                with open(self.region_det_file_prefix +'_feat.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_cls.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
+                with open(self.region_det_file_prefix +'_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = region_feat_f[img_id]
                     cls_label =region_cls_f[img_id]
                     vis_pe = region_bbox_f[img_id]
