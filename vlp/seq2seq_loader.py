@@ -466,9 +466,10 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                 
                 print("Loading")
                 with open(self.region_det_file_prefix +'_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
+                    print(pickle.load(region_feat_f, encoding="bytes").keys())
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")['demo/' + img_id +'.jpg'])
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")['demo/' + img_id +'.jpg'])
-                    vis_pe = torch.cat(torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")['demo/' + img_id +'.jpg']), torch.max(cls_label)[0], 1)
+                    vis_pe = torch.cat(torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")['demo/' + img_id +'.jpg']), cls_label.max(), 1)
 
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
