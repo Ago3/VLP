@@ -261,6 +261,7 @@ def main(parser=None):
 
                 pbar.update(1)
 
+        print(input_lines)
         predictions = [{'image_id': tup[1], 'caption': output_lines[img_idx]} for img_idx, tup in enumerate(input_lines)]
 
         print(predictions)
