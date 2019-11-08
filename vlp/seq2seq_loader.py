@@ -463,13 +463,19 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             img_id = img_path.split('/')[-1].split('.')[0]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
-                print(self.region_det_file_prefix)
-                with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
-                        h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
-                        h5py.File(self.region_bbox_file, 'r') as region_bbox_f:
-                    img = torch.from_numpy(region_feat_f[img_id][:]).float()
-                    cls_label = torch.from_numpy(region_cls_f[img_id][:]).float()
-                    vis_pe = torch.from_numpy(region_bbox_f[img_id][:])
+                
+                print("Loading")
+                with open(self.region_det_file_prefix +'_feat.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_cls.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
+                    img = region_feat_f[img_id]
+                    cls_label =region_cls_f[img_id]
+                    vis_pe = region_bbox_f[img_id]
+
+                # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
+                #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
+                #         h5py.File(self.region_bbox_file, 'r') as region_bbox_f:
+                #     img = torch.from_numpy(region_feat_f[img_id][:]).float()
+                #     cls_label = torch.from_numpy(region_cls_f[img_id][:]).float()
+                #     vis_pe = torch.from_numpy(region_bbox_f[img_id][:])
             else:
                 # legacy, for some datasets, read data from numpy files
                 img = torch.from_numpy(np.load(img_path))
