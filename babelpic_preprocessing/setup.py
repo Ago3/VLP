@@ -17,7 +17,7 @@ def generate_src_file(image_names, src_file):
 
 
 def main():
-    image_names = ['bn:00000007n_0_1.jpg']
+    image_names = ['bn:00000007n_0_1.jpg', 'bn:00000265n_40_1.jpg']
     src_file = 'dataset_babelpic.json'
     generate_src_file(image_names, src_file)
 
