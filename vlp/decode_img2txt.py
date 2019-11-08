@@ -264,7 +264,6 @@ def main(parser=None):
         predictions = [{'image_id': tup[1], 'caption': output_lines[img_idx]} for img_idx, tup in enumerate(input_lines)]
 
         lang_stats = language_eval(args.dataset, predictions, args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2], args.split)
-    print("Here")
 
 
 if __name__ == "__main__":
