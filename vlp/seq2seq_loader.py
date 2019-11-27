@@ -464,7 +464,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             if self.region_det_file_prefix != '':
                 # read data from h5 files
                 
-                print("Loading")
+                print("Loading ", img_id)
                 with open(self.region_det_file_prefix +'_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")['demo/' + img_id +'.jpg'])
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")['demo/' + img_id +'.jpg'])
@@ -491,7 +491,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             rel_area = (vis_pe[:, 3]-vis_pe[:, 1])*(vis_pe[:, 2]-vis_pe[:, 0])
             rel_area.clamp_(0)
 
-            vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 4:]), -1) # confident score
+            vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 5:]), -1) # confident score
             normalized_coord = F.normalize(vis_pe.data[:, :5]-0.5, dim=-1)
             vis_pe = torch.cat((F.layer_norm(vis_pe, [6]), \
                 F.layer_norm(cls_label, [1601])), dim=-1) # 1601 hard coded...
