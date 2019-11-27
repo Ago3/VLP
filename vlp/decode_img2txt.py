@@ -258,8 +258,8 @@ def main(parser=None):
                             output_tokens.append(t)
                         output_sequence = ' '.join(detokenize(output_tokens))
                         output_lines[buf_id[i]] = output_sequence
-                        print(input_lines)
-                        print(i, output_sequence)
+                        print(input_lines[buf_id[i]])
+                        print(output_sequence)
 
                 pbar.update(1)
 
