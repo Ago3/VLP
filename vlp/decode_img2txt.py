@@ -215,7 +215,7 @@ def main(parser=None):
         print('start the caption evaluation...')
         with tqdm(total=total_batch) as pbar:
             while next_i < len(input_lines):
-                if next_i < 15:
+                if next_i > 15:
                     break
                 _chunk = input_lines[next_i:next_i + args.batch_size]
                 buf_id = [x[0] for x in _chunk]
