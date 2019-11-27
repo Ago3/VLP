@@ -498,6 +498,9 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             rel_area = (vis_pe[:, 3]-vis_pe[:, 1])*(vis_pe[:, 2]-vis_pe[:, 0])
             rel_area.clamp_(0)
 
+            print(vis_pe.shape)
+            print(vis_pe[:, :4].shape)
+            print(vis_pe[:, 5:].shape)
             vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 5:]), -1) # confident score
             normalized_coord = F.normalize(vis_pe.data[:, :5]-0.5, dim=-1)
             vis_pe = torch.cat((F.layer_norm(vis_pe, [6]), \
