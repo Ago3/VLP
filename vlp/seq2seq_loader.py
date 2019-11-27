@@ -463,12 +463,6 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             img_id = img_path.split('/')[-1].split('.')[0]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
-                
-                # print("Loading ", img_id)
-                # with open(self.region_det_file_prefix +'_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
-                #     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")['demo/' + img_id +'.jpg'])
-                #     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")['demo/' + img_id +'.jpg'])
-                #     vis_pe = torch.cat((torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")['demo/' + img_id +'.jpg']), cls_label.max(dim=1)[0].unsqueeze(1)), 1)
 
                 img_name = img_id + '.jpg'
                 bbox_img_name = '/'.join(img_path.split('/')[:7]) + '/' + img_name
