@@ -502,6 +502,6 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             vis_pe = torch.cat((vis_pe[:, :4], rel_area.view(-1, 1), vis_pe[:, 5:]), -1) # confident score
             normalized_coord = F.normalize(vis_pe.data[:, :5]-0.5, dim=-1)
             vis_pe = torch.cat((F.layer_norm(vis_pe, [6]), \
-                F.layer_norm(cls_label, [1601])), dim=-1) # 1601 hard coded...
+                F.layer_norm(cls_label.double(), [1601])), dim=-1) # 1601 hard coded...
 
         return (input_ids, segment_ids, position_ids, input_mask, self.task_idx, img, vis_pe)
