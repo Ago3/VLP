@@ -477,6 +477,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes"))
                     vis_pe = torch.cat((torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name]), cls_label.max(dim=1)[0].unsqueeze(1).double()), 1)
                     vis_pe = torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name])
+                    print(vis_pe.shape)
 
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
