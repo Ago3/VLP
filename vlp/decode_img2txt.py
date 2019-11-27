@@ -215,6 +215,8 @@ def main(parser=None):
         print('start the caption evaluation...')
         with tqdm(total=total_batch) as pbar:
             while next_i < len(input_lines):
+                if next_i < 15:
+                    break
                 _chunk = input_lines[next_i:next_i + args.batch_size]
                 buf_id = [x[0] for x in _chunk]
                 buf = [x[2] for x in _chunk]
@@ -258,16 +260,19 @@ def main(parser=None):
                             output_tokens.append(t)
                         output_sequence = ' '.join(detokenize(output_tokens))
                         output_lines[buf_id[i]] = output_sequence
-                        print(input_lines[buf_id[i]])
-                        print(output_sequence)
 
                 pbar.update(1)
 
-        print(input_lines)
+        # print(input_lines)
+        output_file = '/'.join(args.src_file.split('/')[:-1]) + '/babelpic_caps.tsv'
+        with open(output_file, 'w+') as f:
+            for img_idx, input_tup in enumerate(input_lines):
+                f.write(input_tup[2] + '\t' + output_lines[img_idx] + '\n')
+
         predictions = [{'image_id': tup[1], 'caption': output_lines[img_idx]} for img_idx, tup in enumerate(input_lines)]
 
-        for p in predictions:
-            print(p)
+        # for p in predictions:
+            # print(p)
         # Comment the following line for caption generation on BabelPic
         #lang_stats = language_eval(args.dataset, predictions, args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2], args.split)
 
