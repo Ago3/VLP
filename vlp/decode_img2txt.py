@@ -267,7 +267,7 @@ def main(parser=None):
         output_file = '/'.join(args.src_file.split('/')[:-1]) + '/babelpic_caps.tsv'
         with open(output_file, 'w+') as f:
             for img_idx, input_tup in enumerate(input_lines):
-                f.write(input_tup[2] + '\t' + output_lines[img_idx] + '\n')
+                f.write(input_tup[2].split('/')[-1][:-3] + 'jpg\t' + output_lines[img_idx] + '\n')
 
         predictions = [{'image_id': tup[1], 'caption': output_lines[img_idx]} for img_idx, tup in enumerate(input_lines)]
 
