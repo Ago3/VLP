@@ -1044,7 +1044,7 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
             # My changes:
-            binary_answer_ids = torch.tensor([1840, 3117])
+            binary_answer_ids = torch.tensor([1840, 3117], device=input_ids.device)
             # ans_idx = torch.max(vqa2_pred[:, 1:], -1)[1] + 1
             ans_idx = torch.max(vqa2_pred[:, binary_answer_ids], -1)[1]
 
