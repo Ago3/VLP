@@ -191,7 +191,7 @@ def main(parser=None):
         img_idx = 0
         for i in range(1, img_dat.shape[0]):
             if args.enable_butd:
-                src_tk = os.path.join(args.image_root, img_dat[i]['image_name'] + img_dat[i]['feature_path'])
+                src_tk = os.path.join(args.image_root[:-8] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
                 print(src_tk)
             else:
                 raise NotImplementedError
