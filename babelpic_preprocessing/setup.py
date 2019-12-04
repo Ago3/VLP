@@ -18,20 +18,21 @@ def generate_src_file(image_names, src_file):
 
 
 def generate_vqa_src_file(input_files):
-    content = []
     label2ans = lambda r: 'yes' if r == 'ITSELF' else 'no'
     for file in input_files:
+        content = []
         with open(file, 'r') as f:
             for i, line in enumerate(f.readlines()):
                 img_dict = dict()
                 img_dict['question_id'] = i
                 img_dict['image_name'] = line.split('\t')[2]
                 img_dict['feature_path'] = '_feats.pkl'
-                img_dict['question_str'] = line.split('\t')[4]
+                # img_dict['question_str'] = line.split('\t')[4]
+                img_dict['question_str'] = 'Does the image depict {} ({})?'.format(' '.join(line.split('\t')[0].split('_')), line.split('\t')[4])
                 img_dict['has_answer'] = True
                 img_dict['answers'] = [label2ans(line.split('\t')[3])]
                 content.append(img_dict)
-            np.save(file + '_vqa.npy', content, allow_pickle=True)
+            np.save(file + '_vqa_question.npy', content, allow_pickle=True)
 
 
 def generate_detectron_src_file(babelpic_file, src_file):
@@ -58,6 +59,6 @@ def main():
 if __name__ == '__main__':
     # main()
     # generate_detectron_src_file('/home/agostina/master/thesis/Image2Synset/DATA/babelpic_dataset_15.tsv', 'ids.tsv')
-    # generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
-    files = ['../Image2Synset/DATA/15_imgSplit_train.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_val.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_test.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_testhard.tsv.tmp']
-    generate_vqa_src_file(files)
+    generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
+    # files = ['../Image2Synset/DATA/15_imgSplit_train.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_val.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_test.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_testhard.tsv.tmp']
+    # generate_vqa_src_file(files)
