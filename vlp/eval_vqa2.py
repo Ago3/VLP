@@ -50,8 +50,9 @@ def ascii_print(text):
     print(text)
 
 
-def main():
-    parser = argparse.ArgumentParser()
+def main(parser=None):
+    if not parser:
+        parser = argparse.ArgumentParser()
 
     # General
     parser.add_argument("--bert_model", default="bert-base-cased", type=str,
