@@ -19,6 +19,7 @@ def generate_src_file(image_names, src_file):
 
 def generate_vqa_src_file(input_files):
     content = []
+    label2ans = lambda r: 'yes' if r == 'ITSELF' else 'no'
     for file in input_files:
         with open(file, 'r') as f:
             for i, line in enumerate(f.readlines()):
@@ -27,6 +28,8 @@ def generate_vqa_src_file(input_files):
                 img_dict['image_name'] = line.split('\t')[2]
                 img_dict['feature_path'] = '_feats.pkl'
                 img_dict['question_str'] = line.split('\t')[4]
+                img_dict['has_answer'] = True
+                img_dict['answers'] = [label2ans(line.split('\t')[3])]
                 content.append(img_dict)
             np.save(file + '_vqa.npy', content, allow_pickle=True)
 
