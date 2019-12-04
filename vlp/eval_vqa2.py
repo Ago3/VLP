@@ -246,6 +246,8 @@ def main(parser=None):
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
                         predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))})
+                        results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
+                        json.dump(predictions, open(results_file, 'w'))
 
                 pbar.update(1)
 
