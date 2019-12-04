@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 
 def generate_src_file(image_names, src_file):
@@ -16,12 +17,33 @@ def generate_src_file(image_names, src_file):
         json.dump(data, file)
 
 
+def generate_vqa_src_file(input_files):
+    content = []
+    for file in input_files:
+        with open(file, 'r') as f:
+            for i, line in enumerate(f.readlines()):
+                img_dict = dict()
+                img_dict['question_id'] = i
+                img_dict['image_name'] = line.split('\t')[2]
+                img_dict['feature_path'] = '_feats.pkl'
+                img_dict['question_str'] = line.split('\t')[4]
+                content.append(img_dict)
+            np.save(file + '_vqa.npy', content, allow_pickle=True)
+
+
 def generate_detectron_src_file(babelpic_file, src_file):
     with open(babelpic_file, 'r') as f:
         lines = f.readlines()
         im_names = [line.split()[2] for line in lines]
     with open(src_file, 'w+') as f:
         f.write('\n'.join(im_names))
+
+
+def get_all_img_names(detectron_src_file):
+    with open(detectron_src_file, 'r') as f:
+        lines = f.readlines()
+        im_names = [line.split()[0] for line in lines]
+    return im_names
 
 
 def main():
@@ -31,5 +53,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     # generate_detectron_src_file('/home/agostina/master/thesis/Image2Synset/DATA/babelpic_dataset_15.tsv', 'ids.tsv')
+    # generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
+    files = ['../Image2Synset/DATA/15_imgSplit_train.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_val.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_test.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_testhard.tsv.tmp']
+    generate_vqa_src_file(files)

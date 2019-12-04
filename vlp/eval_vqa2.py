@@ -192,6 +192,7 @@ def main():
             if args.enable_butd:
                 src_tk = os.path.join(args.image_root, img_dat[i]['image_name'].split('_')[1],
                     img_dat[i]['feature_path'])
+                print(src_tk)
             else:
                 raise NotImplementedError
             tgt_tk = tokenizer.tokenize(img_dat[i]['question_str'])
@@ -240,6 +241,8 @@ def main():
                         vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
                         vqa_inference=True)
 
+                    print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
+
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
                         predictions.append({'question_id': ques_id, 'answer': bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])})
 
@@ -248,18 +251,18 @@ def main():
         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
         json.dump(predictions, open(results_file, 'w'))
 
-        if args.split == 'test2015':
-            print('*'*80)
-            print('[WARNING] Evaluation unavailable for the test set!\
-    \n          Please submit your saved JSON file named\
-    \n          `{}`\
-    \n          to the VQA 2.0 server:\
-    \n          https://evalai.cloudcv.org/web/challenges/challenge-page/163/submission'.format(results_file))
-            print('*'*80)
-        else:
-            import subprocess
-            print('Evaluating result file {}'.format(results_file))
-            subprocess.Popen(['python', 'pythia/pythia/legacy/eval_model/eval_demo.py', args.ref_file, results_file])
+    #     if args.split == 'test2015':
+    #         print('*'*80)
+    #         print('[WARNING] Evaluation unavailable for the test set!\
+    # \n          Please submit your saved JSON file named\
+    # \n          `{}`\
+    # \n          to the VQA 2.0 server:\
+    # \n          https://evalai.cloudcv.org/web/challenges/challenge-page/163/submission'.format(results_file))
+    #         print('*'*80)
+    #     else:
+    #         import subprocess
+    #         print('Evaluating result file {}'.format(results_file))
+    #         subprocess.Popen(['python', 'pythia/pythia/legacy/eval_model/eval_demo.py', args.ref_file, results_file])
 
 
 if __name__ == "__main__":
