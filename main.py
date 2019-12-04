@@ -1,10 +1,11 @@
-from vlp import main
+from vlp import main, vqa_main
 import argparse
 
 
 def run():
     parser = argparse.ArgumentParser()
-    main(parser)
+    # main(parser)
+    vqa_main(parser)
 
 
 if __name__ == '__main__':
