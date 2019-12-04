@@ -147,8 +147,9 @@ class Img2txtDataset(torch.utils.data.Dataset):
                 for i in range(1, img_dat.shape[0]):
                     if use_num_imgs == -1 or counter < use_num_imgs:
                         if enable_butd:
-                            src_tk = os.path.join(image_root, img_dat[i]['image_name'].split('_')[1],
-                                img_dat[i]['feature_path'])
+                            src_tk = os.path.join(args.image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
+                            # src_tk = os.path.join(image_root, img_dat[i]['image_name'].split('_')[1],
+                                # img_dat[i]['feature_path'])
                         else:
                             raise NotImplementedError
                         tgt_tk = tokenizer.tokenize(img_dat[i]['question_str'])
