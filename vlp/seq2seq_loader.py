@@ -335,7 +335,6 @@ class Preprocess4Seq2seq(Pipeline):
                 # read data from h5 files
                 img_name = img_id + '.jpg'
                 print(img_path, img_id, img_name)
-                exit()
                 bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/babelpic/' + img_name
                 with open(self.region_det_file_prefix + img_name + '_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix + img_name +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
