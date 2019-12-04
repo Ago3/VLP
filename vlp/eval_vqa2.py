@@ -242,9 +242,10 @@ def main(parser=None):
 
                     # print(bi_uni_pipeline[0].ans_proc.word2idx('yes'))
                     # print(bi_uni_pipeline[0].ans_proc.word2idx('no'))
+                    binary_ans = lambda s: 1 if s == 'yes' else 0
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
-                        print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
-                        predictions.append({'question_id': ques_id, 'answer': bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])})
+                        # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
+                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))})
 
                 pbar.update(1)
 
