@@ -240,9 +240,9 @@ def main(parser=None):
                         vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
                         vqa_inference=True)
 
-                    print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
 
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
+                        print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
                         predictions.append({'question_id': ques_id, 'answer': bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])})
 
                 pbar.update(1)
