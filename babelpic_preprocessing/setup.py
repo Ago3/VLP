@@ -59,6 +59,6 @@ def main():
 if __name__ == '__main__':
     # main()
     # generate_detectron_src_file('/home/agostina/master/thesis/Image2Synset/DATA/babelpic_dataset_15.tsv', 'ids.tsv')
-    generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
-    # files = ['../Image2Synset/DATA/15_imgSplit_train.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_val.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_test.tsv.tmp', '../Image2Synset/DATA/15_imgSplit_testhard.tsv.tmp']
-    # generate_vqa_src_file(files)
+    # generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
+    files = ['../Image2Synset/DATA/15_train.tsv.tmp', '../Image2Synset/DATA/15_val.tsv.tmp', '../Image2Synset/DATA/15_test.tsv.tmp', '../Image2Synset/DATA/15_test_hard.tsv.tmp']
+    generate_vqa_src_file(files)
