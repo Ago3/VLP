@@ -1037,11 +1037,12 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
         if vqa_inference:
             assert(ans_labels == None)
             sequence_output, pooled_output = self.bert(vis_feats, vis_pe, input_ids, token_type_ids,
-                attention_mask, output_all_encoded_layers=False, len_vis_input=self.len_vis_input)
+                attention_mask, output_all_encoded_layers=True, len_vis_input=self.len_vis_input)
+
+            print(sequence_output.shape)
 
             vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
-            vqa2_sensembed = torch.cat([sequence_output[:, 0], sequence_output[:, self.len_vis_input+1]], dim=1)
-            print(vqa2_sensembed.shape)
+            vqa2_sensembed = sequence_output[:, 0] * sequence_output[:, self.len_vis_input+1]
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
             # My changes:
