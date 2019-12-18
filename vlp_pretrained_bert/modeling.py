@@ -294,7 +294,6 @@ class BertSelfAttention(nn.Module):
         # This is actually dropping out entire tokens to attend to, which might
         # seem a bit unusual, but is taken from the original Transformer paper.
         attention_probs = self.dropout(attention_probs)
-
         context_layer = torch.matmul(attention_probs, value_layer)
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[
@@ -1041,6 +1040,7 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
                 attention_mask, output_all_encoded_layers=False, len_vis_input=self.len_vis_input)
 
             vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
+            print(vqa2_embed.shape)
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
             # My changes:
