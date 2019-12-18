@@ -1043,7 +1043,7 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
             # vqa2_embed = sequence_output[-1][:, 0]*sequence_output[-1][:, self.len_vis_input+1]
             # vqa2_sensembed = torch.mean(torch.stack([v[:, 0] * v[:, self.len_vis_input + 1] for v in sequence_output[-4:]]), dim=0)
             effective_length = input_ids.shape[1] - (input_ids == 0).sum(dim=1)
-            vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768)
+            vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()
 
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
