@@ -35,7 +35,7 @@ def readable_neighbours(dataset, neigh_file, hr_file):
         for line in f.readlines():
             synset = line.split('\t')[1]
             if synset not in synset2lemma:
-                synset2lemma[synset] = ''.join(line.split('\t')[0].split('_'))
+                synset2lemma[synset] = ' '.join(line.split('\t')[0].split('_'))
                 synset2gloss[synset] = line.split('\t')[4]
     with open(neigh_file, 'r') as f, open(hr_file, 'w+') as w:
         for line in f.readlines():
@@ -47,7 +47,7 @@ def readable_neighbours(dataset, neigh_file, hr_file):
 
 def main():
     # generate_vlp_input_file('../Image2Synset/DATA/true_examples_15.txt', 'babelpic_gold')
-    readable_neighbours('../Image2Synset/DATA/true_examples_15.txt', 'neighbours_cat.tsv', 'neighbours_cat_hr.tsv')
+    readable_neighbours('../Image2Synset/DATA/true_examples_15.txt', 'neighbours_mul_4l.tsv', 'neighbours_mul_4l_hr.tsv')
 
 
 if __name__ == '__main__':
