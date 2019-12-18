@@ -189,7 +189,7 @@ def main(parser=None):
 
         img_dat = np.load(args.src_file, allow_pickle=True)
         img_idx = 0
-        for i in range(1, img_dat.shape[0]):
+        for i in range(img_dat.shape[0]):
             if args.enable_butd:
                 src_tk = os.path.join(args.image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
             else:
@@ -234,7 +234,7 @@ def main(parser=None):
                         conv_feats = conv_feats.view(conv_feats.size(0), conv_feats.size(1),
                             -1).permute(0,2,1).contiguous()
 
-                    ans_idx = model(conv_feats, vis_pe, input_ids, segment_ids,
+                    ans_idx, embeddings = model(conv_feats, vis_pe, input_ids, segment_ids,
                         input_mask, lm_label_ids, None, is_next, masked_pos=masked_pos,
                         masked_weights=masked_weights, task_idx=task_idx,
                         vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
@@ -244,6 +244,7 @@ def main(parser=None):
                     # print(bi_uni_pipeline[0].ans_proc.word2idx('no'))
                     binary_ans = lambda s: 1 if s == 'yes' else 0
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
+                        print(embeddings[ind].shape)
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
                         predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))})
                         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
