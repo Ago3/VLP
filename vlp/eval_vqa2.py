@@ -204,6 +204,7 @@ def main(parser=None):
         score_trace_list = [None] * len(input_lines)
         total_batch = math.ceil(len(input_lines) / args.batch_size)
         predictions = []
+        embeddings_dict = {}
 
         print('start the VQA evaluation...')
         with tqdm(total=total_batch) as pbar:
@@ -240,11 +241,20 @@ def main(parser=None):
                         vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
                         vqa_inference=True)
 
-                    # print(bi_uni_pipeline[0].ans_proc.word2idx('yes'))
-                    # print(bi_uni_pipeline[0].ans_proc.word2idx('no'))
+                    #embeddings = embeddings.view(-1, 5, 768)
+                    #centroids = torch.mean(embeddings, dim=1)
+                    #for ind in range(0, args.batch_size, 5):
+                    #    synset = img_dat[(next_i - args.batch_size + ind)]['synset']
+                    #    embeddings_dict[synset + ' ' + offset] = centroids[int(ind/5), :]
                     binary_ans = lambda s: 1 if s == 'yes' else 0
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
-                        print(embeddings[ind].shape)
+                        synset = img_dat[(next_i - args.batch_size + ind)]['synset']
+                        if synset in embeddings_dict:
+                            embeddings_dict[synset].append(embeddings[ind, :].unsqueeze(0))
+                        else:
+                            embeddings_dict[synset] = [embeddings[ind, :].unsqueeze(0)]
+                        #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
+                        #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
                         predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))})
                         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
@@ -254,6 +264,13 @@ def main(parser=None):
 
         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
         json.dump(predictions, open(results_file, 'w'))
+
+        centroids = []
+        for synset in embeddings_dict:
+            embs = torch.cat(embeddings_dict[synset], dim=0)
+            centroid = torch.mean(embs, dim=0)
+            centroids.append({synset: centroid})
+        np.save(args.output_dir + '/sensemb.npy', centroids, allow_pickle=True)
 
     #     if args.split == 'test2015':
     #         print('*'*80)
