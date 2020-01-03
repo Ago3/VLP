@@ -62,4 +62,5 @@ if __name__ == '__main__':
     # generate_src_file(get_all_img_names('missing_ids.tsv'), 'missing_dataset_babelpic.json')
     # files = ['../Image2Synset/DATA/15_train.tsv.tmp', '../Image2Synset/DATA/15_val.tsv.tmp', '../Image2Synset/DATA/15_test.tsv.tmp', '../Image2Synset/DATA/15_test_hard.tsv.tmp']
     # generate_vqa_src_file(files)
-    generate_vqa_src_file(['/home/agostina/eclipse-workspace/wsd/imagenet_dataset.tsv'])
+    # generate_vqa_src_file(['/home/agostina/eclipse-workspace/wsd/imagenet_dataset.tsv'])
+    generate_vqa_src_file(['glosses_silver_batch_{}_filtered.tsv'.format(i) for i in range(5)])

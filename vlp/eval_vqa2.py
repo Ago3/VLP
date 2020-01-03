@@ -108,6 +108,8 @@ def main(parser=None):
                         type=str,
                         help="The output directory where the model predictions and checkpoints will be written.")
     parser.add_argument('--file_valid_jpgs', default='', type=str)
+    parser.add_argument('--sensemb', action='store_true',
+                        help='generate sense embeddings')
 
     args = parser.parse_args()
 
@@ -248,11 +250,12 @@ def main(parser=None):
                     #    embeddings_dict[synset + ' ' + offset] = centroids[int(ind/5), :]
                     binary_ans = lambda s: 1 if s == 'yes' else 0
                     for ind, (eval_idx, ques_id) in enumerate(buf_id):
-                        synset = img_dat[(next_i - args.batch_size + ind)]['synset']
-                        if synset in embeddings_dict:
-                            embeddings_dict[synset].append(embeddings[ind, :].unsqueeze(0))
-                        else:
-                            embeddings_dict[synset] = [embeddings[ind, :].unsqueeze(0)]
+                        if args.sensemb:
+                            synset = img_dat[(next_i - args.batch_size + ind)]['synset']
+                            if synset in embeddings_dict:
+                                embeddings_dict[synset].append(embeddings[ind, :].unsqueeze(0))
+                            else:
+                                embeddings_dict[synset] = [embeddings[ind, :].unsqueeze(0)]
                         #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
                         #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
@@ -265,12 +268,13 @@ def main(parser=None):
         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
         json.dump(predictions, open(results_file, 'w'))
 
-        centroids = []
-        for synset in embeddings_dict:
-            embs = torch.cat(embeddings_dict[synset], dim=0)
-            centroid = torch.mean(embs, dim=0)
-            centroids.append({synset: centroid})
-        np.save(args.output_dir + '/sensemb.npy', centroids, allow_pickle=True)
+        if args.sensemb:
+            centroids = []
+            for synset in embeddings_dict:
+                embs = torch.cat(embeddings_dict[synset], dim=0)
+                centroid = torch.mean(embs, dim=0)
+                centroids.append({synset: centroid})
+            np.save(args.output_dir + '/sensemb.npy', centroids, allow_pickle=True)
 
     #     if args.split == 'test2015':
     #         print('*'*80)

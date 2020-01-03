@@ -108,3 +108,4 @@ venv.bak/
 vis/
 vis_analysis/
 tmp/
+*.npy

@@ -47,7 +47,7 @@ def readable_neighbours(dataset, neigh_file, hr_file):
 
 def main():
     # generate_vlp_input_file('../Image2Synset/DATA/true_examples_15.txt', 'babelpic_gold')
-    readable_neighbours('../Image2Synset/DATA/true_examples_15.txt', 'neighbours_mul_4l.tsv', 'neighbours_mul_4l_hr.tsv')
+    readable_neighbours('../Image2Synset/DATA/true_examples_15.txt', 'neighbours_ts.tsv', 'neighbours_ts_hr.tsv')
 
 
 if __name__ == '__main__':
