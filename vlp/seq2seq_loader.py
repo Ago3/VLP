@@ -330,7 +330,7 @@ class Preprocess4Seq2seq(Pipeline):
             img = self.res_Normalize(img)
         else:
             # loading pre-processed features
-            img_id, ending = img_path.split('/')[-1].split('.')[-1]
+            img_id, ending = img_path.split('/')[-1].split('.')[:-1]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
                 img_name = img_id + ending.split('_')[0]
@@ -469,7 +469,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                 img = torch.Tensor(self.res_Normalize.mean).view(-1, 1, 1).expand(
                     (3, self.CenterCrop.size[0], self.CenterCrop.size[1]))
         else:
-            img_id, ending = img_path.split('/')[-1].split('.')[-1]
+            img_id, ending = img_path.split('/')[-1].split('.')[:-1]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
 
