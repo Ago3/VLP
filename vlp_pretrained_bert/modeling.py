@@ -1052,7 +1052,7 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
             # ans_idx = torch.max(vqa2_pred[:, 1:], -1)[1] + 1
             ans_idx = torch.max(vqa2_pred[:, binary_answer_ids], -1)[1]
 
-            return binary_answer_ids[ans_idx], vqa2_sensembed
+            return binary_answer_ids[ans_idx], vqa2_sensembed, vqa2_pred[:, binary_answer_ids]
             #return ans_idx
 
         # zero out vis_masked_pos

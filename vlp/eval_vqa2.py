@@ -240,7 +240,7 @@ def main(parser=None):
                         conv_feats = conv_feats.view(conv_feats.size(0), conv_feats.size(1),
                             -1).permute(0,2,1).contiguous()
 
-                    ans_idx, embeddings = model(conv_feats, vis_pe, input_ids, segment_ids,
+                    ans_idx, embeddings, answer_scores = model(conv_feats, vis_pe, input_ids, segment_ids,
                         input_mask, lm_label_ids, None, is_next, masked_pos=masked_pos,
                         masked_weights=masked_weights, task_idx=task_idx,
                         vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
@@ -262,7 +262,7 @@ def main(parser=None):
                         #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
                         #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
-                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))})
+                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1], 'score_no': answer_scores[ind, 0], 'score': answer_scores[ind, 1] / torch.sum(answer_scores[ind])})
                         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
                         json.dump(predictions, open(results_file, 'w'))
 
