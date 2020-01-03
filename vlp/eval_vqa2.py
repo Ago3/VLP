@@ -193,7 +193,10 @@ def main(parser=None):
         img_idx = 0
         for i in range(img_dat.shape[0]):
             if args.enable_butd:
-                src_tk = os.path.join(args.image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
+                if 'babelpic' in args.image_root:
+                    src_tk = os.path.join(args.image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
+                elif 'silver' in args.image_root:
+                    src_tk = os.path.join(args.image_root[:-8], img_dat[i]['image_name'] + img_dat[i]['feature_path'])
             else:
                 raise NotImplementedError
             tgt_tk = tokenizer.tokenize(img_dat[i]['question_str'])
