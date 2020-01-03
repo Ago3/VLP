@@ -330,10 +330,10 @@ class Preprocess4Seq2seq(Pipeline):
             img = self.res_Normalize(img)
         else:
             # loading pre-processed features
-            img_id = img_path.split('/')[-1].split('.')[0]
+            img_id, ending = img_path.split('/')[-1].split('.')
             if self.region_det_file_prefix != '':
                 # read data from h5 files
-                img_name = img_id + '.jpg'
+                img_name = img_id + ending
                 bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/babelpic/' + img_name
                 with open(self.region_det_file_prefix + img_name + '_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix + img_name +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
@@ -469,11 +469,11 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                 img = torch.Tensor(self.res_Normalize.mean).view(-1, 1, 1).expand(
                     (3, self.CenterCrop.size[0], self.CenterCrop.size[1]))
         else:
-            img_id = img_path.split('/')[-1].split('.')[0]
+            img_id, ending = img_path.split('/')[-1].split('.')
             if self.region_det_file_prefix != '':
                 # read data from h5 files
 
-                img_name = img_id + '.jpg'
+                img_name = img_id + ending
                 bbox_img_name = '/'.join(img_path.split('/')[:7]) + '/' + img_name
                 with open(self.region_det_file_prefix + img_name + '_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix + img_name +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
