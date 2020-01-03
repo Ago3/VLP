@@ -262,7 +262,10 @@ def main(parser=None):
                         #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
                         #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
                         # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
-                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1], 'score_no': answer_scores[ind, 0], 'score': answer_scores[ind, 1] / torch.sum(answer_scores[ind])})
+                        final_score = torch.abs(answer_scores[ind, 1]) / torch.sum(torch.abs(answer_scores)[ind])
+                        if (answer_scores[ind, :] < 0).sum() > 0:
+                            final_score = 1 - final_score
+                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1].data, 'score_no': answer_scores[ind, 0].data, 'score': final_score.data})
                         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
                         json.dump(predictions, open(results_file, 'w'))
 
