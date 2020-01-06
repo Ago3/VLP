@@ -336,7 +336,7 @@ class Preprocess4Seq2seq(Pipeline):
             img_id, ending = img_path.split('/')[-1].split('.')[:-1]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
-                img_name = img_id + '.' + ending.split('_')[0]
+                img_name = img_id + '.' + '_'.join(ending.split('_')[:-1])
                 if 'babelpic' in img_path:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/babelpic/' + img_name
                 else:
@@ -478,8 +478,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
             img_id, ending = img_path.split('/')[-1].split('.')[:-1]
             if self.region_det_file_prefix != '':
                 # read data from h5 files
-
-                img_name = img_id + '.' + ending.split('_')[0]
+                img_name = img_id + '.' + '_'.join(ending.split('_')[:-1])
                 bbox_img_name = '/'.join(img_path.split('/')[:7]) + '/' + img_name
                 with open(self.region_det_file_prefix + img_name + '_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix + img_name +'_scores.pkl', 'rb') as region_cls_f, open(self.region_bbox_file, 'rb') as region_bbox_f:
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
