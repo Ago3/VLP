@@ -205,6 +205,9 @@ class Preprocess4Seq2seq(Pipeline):
         self.mode = mode
         self.region_bbox_file = region_bbox_file
         self.region_det_file_prefix = region_det_file_prefix
+        
+        with open(self.region_bbox_file, 'rb') as region_bbox_f:
+            self.bbox_dict = pickle.load(region_bbox_f, encoding="bytes")
 
         if mode == 's2s':
             self.task_idx = 3   # relax projection layer for different tasks
@@ -345,7 +348,7 @@ class Preprocess4Seq2seq(Pipeline):
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")).float()
                     # vis_pe = torch.cat((torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name]), cls_label.max(dim=1)[0].unsqueeze(1).double()), 1)
-                    vis_pe = torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name]).float()
+                    vis_pe = torch.from_numpy(self.bbox_dict[bbox_img_name]).float()
                 # read data from h5 files
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
@@ -484,7 +487,7 @@ class Preprocess4Seq2seqDecoder(Pipeline):
                     img = torch.from_numpy(pickle.load(region_feat_f, encoding="bytes")).float()
                     cls_label = torch.from_numpy(pickle.load(region_cls_f, encoding="bytes")).float()
                     # vis_pe = torch.cat((torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name]), cls_label.max(dim=1)[0].unsqueeze(1).double()), 1)
-                    vis_pe = torch.from_numpy(pickle.load(region_bbox_f, encoding="bytes")[bbox_img_name]).float()
+                    vis_pe = torch.from_numpy(self.bbox_dict[bbox_img_name]).float()
 
                 # with h5py.File(self.region_det_file_prefix+'_feat'+img_id[-3:] +'.h5', 'r') as region_feat_f, \
                 #         h5py.File(self.region_det_file_prefix+'_cls'+img_id[-3:] +'.h5', 'r') as region_cls_f, \
