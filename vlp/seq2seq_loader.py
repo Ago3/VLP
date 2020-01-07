@@ -147,7 +147,7 @@ class Img2txtDataset(torch.utils.data.Dataset):
                 for i in range(1, img_dat.shape[0]):
                     if use_num_imgs == -1 or counter < use_num_imgs:
                         if enable_butd:
-                            if 'babelpic' in image_root:
+                            if 'babelpic' in image_root or 'imagenet' in image_root:
                                 src_tk = os.path.join(image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
                             elif 'silver' in image_root:
                                 src_tk = os.path.join(image_root[:-8], img_dat[i]['image_name'] + img_dat[i]['feature_path'])
@@ -342,6 +342,8 @@ class Preprocess4Seq2seq(Pipeline):
                 img_name = img_id + '.' + '_'.join(ending.split('_')[:-1])
                 if 'babelpic' in img_path:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/babelpic/' + img_name
+                elif 'imagenet' in img_path:
+                    bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/imagenet/' + img_name
                 else:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/silver/' + img_name
                 with open(self.region_det_file_prefix + img_name + '_feats.pkl', 'rb') as region_feat_f, open(self.region_det_file_prefix + img_name +'_scores.pkl', 'rb') as region_cls_f:
