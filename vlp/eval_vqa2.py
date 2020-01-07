@@ -193,7 +193,7 @@ def main(parser=None):
         img_idx = 0
         for i in range(img_dat.shape[0]):
             if args.enable_butd:
-                if 'babelpic' in args.image_root:
+                if 'babelpic' in args.image_root or 'imagenet' in args.image_root:
                     src_tk = os.path.join(args.image_root[:-9] + 'output', img_dat[i]['image_name'] + img_dat[i]['feature_path'])
                 elif 'silver' in args.image_root:
                     src_tk = os.path.join(args.image_root[:-8], img_dat[i]['image_name'] + img_dat[i]['feature_path'])
