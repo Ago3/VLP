@@ -104,7 +104,7 @@ def main(parser=None):
     parser.add_argument('--region_bbox_file', default='coco_detection_vg_thresh0.2_feat_gvd_checkpoint_trainvaltest.h5', type=str)
     parser.add_argument('--region_det_file_prefix', default='feat_cls_1000/coco_detection_vg_100dets_gvd_checkpoint_trainval', type=str)
     parser.add_argument("--output_dir",
-                        default='tmp',
+                        default='/media/SHARED/HDD1_2TB/acalabrese/vlp_data/tmp',
                         type=str,
                         help="The output directory where the model predictions and checkpoints will be written.")
     parser.add_argument('--file_valid_jpgs', default='', type=str)
