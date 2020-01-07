@@ -212,66 +212,69 @@ def main(parser=None):
         embeddings_dict = {}
 
         print('start the VQA evaluation...')
-        with tqdm(total=total_batch) as pbar:
-            while next_i < len(input_lines):
-                _chunk = input_lines[next_i:next_i + args.batch_size]
-                buf = [(x[1], x[2]) for x in _chunk]
-                buf_id = [(x[0], x[3]) for x in _chunk]
-                next_i += args.batch_size
-                instances = []
-                for instance in buf:
-                    for proc in bi_uni_pipeline:
-                        instances.append(proc(instance[:2]+({'answers': ['dummy']},)))
-                with torch.no_grad():
-                    batch = batch_list_to_batch_tensors(
-                        instances)
-                    batch = [t.to(device) for t in batch]
-                    input_ids, segment_ids, input_mask, lm_label_ids, masked_pos, masked_weights, is_next, task_idx, img, vis_masked_pos, vis_pe, _ = batch
-
-                    if args.fp16:
-                        img = img.half()
-                        vis_pe = vis_pe.half()
-
-                    if args.enable_butd:
-                        conv_feats = img.data # Bx100x2048
-                        vis_pe = vis_pe.data
-                    else:
-                        conv_feats, _ = cnn(img.data) # Bx2048x7x7
-                        conv_feats = conv_feats.view(conv_feats.size(0), conv_feats.size(1),
-                            -1).permute(0,2,1).contiguous()
-
-                    ans_idx, embeddings, answer_scores = model(conv_feats, vis_pe, input_ids, segment_ids,
-                        input_mask, lm_label_ids, None, is_next, masked_pos=masked_pos,
-                        masked_weights=masked_weights, task_idx=task_idx,
-                        vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
-                        vqa_inference=True)
-
-                    #embeddings = embeddings.view(-1, 5, 768)
-                    #centroids = torch.mean(embeddings, dim=1)
-                    #for ind in range(0, args.batch_size, 5):
-                    #    synset = img_dat[(next_i - args.batch_size + ind)]['synset']
-                    #    embeddings_dict[synset + ' ' + offset] = centroids[int(ind/5), :]
-                    binary_ans = lambda s: 1 if s == 'yes' else 0
-                    for ind, (eval_idx, ques_id) in enumerate(buf_id):
-                        if args.sensemb:
-                            synset = img_dat[(next_i - args.batch_size + ind)]['synset']
-                            if synset in embeddings_dict:
-                                embeddings_dict[synset].append(embeddings[ind, :].unsqueeze(0))
-                            else:
-                                embeddings_dict[synset] = [embeddings[ind, :].unsqueeze(0)]
-                        #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
-                        #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
-                        # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
-                        final_score = torch.abs(answer_scores[ind, 1]) / torch.sum(torch.abs(answer_scores)[ind])
-                        if (answer_scores[ind, :] < 0).sum() > 0:
-                            final_score = 1 - final_score
-                        predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1].data.item(), 'score_no': answer_scores[ind, 0].data.item(), 'score': final_score.data.item()})
-                        results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
-                        json.dump(predictions, open(results_file, 'w'))
-
-                pbar.update(1)
-
         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
+        os.remove(results_file)
+        with open(results_file, 'a+') as res_file:
+            with tqdm(total=total_batch) as pbar:
+                while next_i < len(input_lines):
+                    _chunk = input_lines[next_i:next_i + args.batch_size]
+                    buf = [(x[1], x[2]) for x in _chunk]
+                    buf_id = [(x[0], x[3]) for x in _chunk]
+                    next_i += args.batch_size
+                    instances = []
+                    for instance in buf:
+                        for proc in bi_uni_pipeline:
+                            instances.append(proc(instance[:2]+({'answers': ['dummy']},)))
+                    with torch.no_grad():
+                        batch = batch_list_to_batch_tensors(
+                            instances)
+                        batch = [t.to(device) for t in batch]
+                        input_ids, segment_ids, input_mask, lm_label_ids, masked_pos, masked_weights, is_next, task_idx, img, vis_masked_pos, vis_pe, _ = batch
+
+                        if args.fp16:
+                            img = img.half()
+                            vis_pe = vis_pe.half()
+
+                        if args.enable_butd:
+                            conv_feats = img.data # Bx100x2048
+                            vis_pe = vis_pe.data
+                        else:
+                            conv_feats, _ = cnn(img.data) # Bx2048x7x7
+                            conv_feats = conv_feats.view(conv_feats.size(0), conv_feats.size(1),
+                                -1).permute(0,2,1).contiguous()
+
+                        ans_idx, embeddings, answer_scores = model(conv_feats, vis_pe, input_ids, segment_ids,
+                            input_mask, lm_label_ids, None, is_next, masked_pos=masked_pos,
+                            masked_weights=masked_weights, task_idx=task_idx,
+                            vis_masked_pos=vis_masked_pos, drop_worst_ratio=0,
+                            vqa_inference=True)
+
+                        #embeddings = embeddings.view(-1, 5, 768)
+                        #centroids = torch.mean(embeddings, dim=1)
+                        #for ind in range(0, args.batch_size, 5):
+                        #    synset = img_dat[(next_i - args.batch_size + ind)]['synset']
+                        #    embeddings_dict[synset + ' ' + offset] = centroids[int(ind/5), :]
+                        binary_ans = lambda s: 1 if s == 'yes' else 0
+                        for ind, (eval_idx, ques_id) in enumerate(buf_id):
+                            if args.sensemb:
+                                synset = img_dat[(next_i - args.batch_size + ind)]['synset']
+                                if synset in embeddings_dict:
+                                    embeddings_dict[synset].append(embeddings[ind, :].unsqueeze(0))
+                                else:
+                                    embeddings_dict[synset] = [embeddings[ind, :].unsqueeze(0)]
+                            #offset = img_dat[(next_i - args.batch_size + ind)]['offset']
+                            #np.save(args.output_dir + '/{}_{}_sensemb.npy'.format(synset, offset), embeddings[ind, :].cpu(), allow_pickle=True)
+                            # print(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind]))
+                            final_score = torch.abs(answer_scores[ind, 1]) / torch.sum(torch.abs(answer_scores)[ind])
+                            if (answer_scores[ind, :] < 0).sum() > 0:
+                                final_score = 1 - final_score
+                            predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1].data.item(), 'score_no': answer_scores[ind, 0].data.item(), 'score': final_score.data.item()})
+                            json.dump(predictions[-1], res_file)
+                            res_file.write('\n')
+
+                    pbar.update(1)
+
+        # results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
         json.dump(predictions, open(results_file, 'w'))
 
         if args.sensemb:
