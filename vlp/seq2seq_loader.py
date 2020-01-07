@@ -342,7 +342,7 @@ class Preprocess4Seq2seq(Pipeline):
                 img_name = img_id + '.' + '_'.join(ending.split('_')[:-1])
                 if 'babelpic' in img_path:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/babelpic/' + img_name
-                elif 'imagenet' in img_path:
+                elif 'output' in img_path:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/imagenet/' + img_name
                 else:
                     bbox_img_name = '/'.join(img_path.split('/')[:6]) + '/silver/' + img_name
