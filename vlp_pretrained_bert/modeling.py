@@ -1037,13 +1037,14 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
         if vqa_inference:
             assert(ans_labels == None)
             sequence_output, pooled_output = self.bert(vis_feats, vis_pe, input_ids, token_type_ids,
-                attention_mask, output_all_encoded_layers=False, len_vis_input=self.len_vis_input)
+                attention_mask, output_all_encoded_layers=True, len_vis_input=self.len_vis_input)
 
-            vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
-            # vqa2_embed = sequence_output[-1][:, 0]*sequence_output[-1][:, self.len_vis_input+1]
-            # vqa2_sensembed = torch.mean(torch.stack([v[:, 0] * v[:, self.len_vis_input + 1] for v in sequence_output[-4:]]), dim=0)
+            #vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
+            vqa2_embed = sequence_output[-1][:, 0]*sequence_output[-1][:, self.len_vis_input+1]
+            #vqa2_sensembed = torch.mean(torch.stack([v[:, 0] * v[:, self.len_vis_input + 1] for v in sequence_output[-4:]]), dim=0) 4l
             effective_length = input_ids.shape[1] - (input_ids == 0).sum(dim=1)
-            vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()
+            vqa2_sensembed = torch.stack(sequence_output, dim=0)[-4:].sum(2).sum(0) / effective_length.view(-1, 1).float()  # ts_4l
+            #vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()  # ts
 
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
