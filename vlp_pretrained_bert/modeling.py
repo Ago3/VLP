@@ -290,6 +290,7 @@ class BertSelfAttention(nn.Module):
 
         # Normalize the attention scores to probabilities.
         attention_probs = nn.Softmax(dim=-1)(attention_scores)
+        self.attention_probs = attention_probs
 
         # This is actually dropping out entire tokens to attend to, which might
         # seem a bit unusual, but is taken from the original Transformer paper.
@@ -1045,6 +1046,9 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
             effective_length = input_ids.shape[1] - (input_ids == 0).sum(dim=1)
             vqa2_sensembed = torch.stack(sequence_output, dim=0)[-4:].sum(2).sum(0) / effective_length.view(-1, 1).float()  # ts_4l
             #vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()  # ts
+
+            attention_probs = self.bert.encoder.layer.attention.self.attention_probs
+            print(attention_probs.shape)
 
             vqa2_pred = self.ans_classifier(vqa2_embed)
 
