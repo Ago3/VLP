@@ -213,7 +213,8 @@ def main(parser=None):
 
         print('start the VQA evaluation...')
         results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
-        os.remove(results_file)
+        if os.path.exists(results_file):
+            os.remove(results_file)
         with open(results_file, 'a+') as res_file:
             with tqdm(total=total_batch) as pbar:
                 while next_i < len(input_lines):
@@ -269,13 +270,16 @@ def main(parser=None):
                             if (answer_scores[ind, :] < 0).sum() > 0:
                                 final_score = 1 - final_score
                             predictions.append({'question_id': ques_id, 'answer': binary_ans(bi_uni_pipeline[0].ans_proc.idx2word(ans_idx[ind])), 'score_yes': answer_scores[ind, 1].data.item(), 'score_no': answer_scores[ind, 0].data.item(), 'score': final_score.data.item()})
-                            json.dump(predictions[-1], res_file)
-                            res_file.write('\n')
+                            #Uncomment this block
+                            #json.dump(predictions[-1], res_file)
+                            #res_file.write('\n')
 
                     pbar.update(1)
 
         # results_file = os.path.join(args.output_dir, 'vqa2-results-'+args.model_recover_path.split('/')[-2]+'-'+args.split+'-'+args.model_recover_path.split('/')[-1].split('.')[-2]+'.json')
-        json.dump(predictions, open(results_file, 'w'))
+        
+        #Uncomment this
+        #json.dump(predictions, open(results_file, 'w'))
 
         if args.sensemb:
             centroids = []
@@ -283,7 +287,7 @@ def main(parser=None):
                 embs = torch.cat(embeddings_dict[synset], dim=0)
                 centroid = torch.mean(embs, dim=0)
                 centroids.append({synset: centroid})
-            np.save(args.output_dir + '/sensemb.npy', centroids, allow_pickle=True)
+            np.save(args.output_dir + '/sensemb_ts_1l_FT.npy', centroids, allow_pickle=True)
 
     #     if args.split == 'test2015':
     #         print('*'*80)

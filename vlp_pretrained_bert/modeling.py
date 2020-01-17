@@ -1038,31 +1038,31 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
         if vqa_inference:
             assert(ans_labels == None)
             sequence_output, pooled_output = self.bert(vis_feats, vis_pe, input_ids, token_type_ids,
-                attention_mask, output_all_encoded_layers=True, len_vis_input=self.len_vis_input)
+                attention_mask, output_all_encoded_layers=False, len_vis_input=self.len_vis_input)
 
-            #vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
-            vqa2_embed = sequence_output[-1][:, 0]*sequence_output[-1][:, self.len_vis_input+1]
+            vqa2_embed = sequence_output[:, 0]*sequence_output[:, self.len_vis_input+1]
+            #vqa2_embed = sequence_output[-1][:, 0]*sequence_output[-1][:, self.len_vis_input+1]
             #vqa2_sensembed = torch.mean(torch.stack([v[:, 0] * v[:, self.len_vis_input + 1] for v in sequence_output[-4:]]), dim=0) 4l
             effective_length = input_ids.shape[1] - (input_ids == 0).sum(dim=1)
             #vqa2_sensembed = torch.stack(sequence_output, dim=0)[-4:].sum(2).sum(0) / effective_length.view(-1, 1).float()  # ts_4l
-            #vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()  # ts
-
-            attention_probs = torch.stack([v.attention.self.attention_probs for v in self.bert.encoder.layer[-4:]], dim=0)
+            vqa2_sensembed = torch.sum(sequence_output, dim=1) / effective_length.unsqueeze(dim=1).repeat(1, 768).float()  # ts
+            #attention_probs = torch.stack([v.attention.self.attention_probs for v in self.bert.encoder.layer[-4:]], dim=0)
             #boolean_softmax_mask = torch.arange(sequence_output[0].shape[1], device=attention_probs.device).view(1, -1).repeat(input_ids.shape[0], 1) >= effective_length.view(-1, 1)
             #softmax_mask = boolean_softmax_mask.float().masked_fill_(boolean_softmax_mask, float("-inf"))
             #attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0) + softmax_mask, dim=1)
             
-            attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0)[:, 102:], dim=1)
-            bsz, ts, hidden = sequence_output[0].size()
-            vqa2_sensembed = (
-                    (torch.stack(sequence_output[-4:], dim=0).sum(0)[:, 102:, :] * 
-                    attention_weights.unsqueeze(-1)).sum(1))  # w_ts_4l
+            #attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0), dim=1)
+            #bsz, ts, hidden = sequence_output[0].size()
+            #vqa2_sensembed = (
+            #        (torch.stack(sequence_output[-4:], dim=0).sum(0) * 
+            #        attention_weights.unsqueeze(-1)).sum(1))  # w_ts_4l
 
             vqa2_pred = self.ans_classifier(vqa2_embed)
             # My changes:
             binary_answer_ids = torch.tensor([1840, 3117], device=input_ids.device)
             # ans_idx = torch.max(vqa2_pred[:, 1:], -1)[1] + 1
             ans_idx = torch.max(vqa2_pred[:, binary_answer_ids], -1)[1]
+
 
             return binary_answer_ids[ans_idx], vqa2_sensembed, vqa2_pred[:, binary_answer_ids]
             #return ans_idx
