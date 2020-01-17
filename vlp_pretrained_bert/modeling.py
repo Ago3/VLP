@@ -1052,10 +1052,10 @@ class BertForPreTrainingLossMask(PreTrainedBertModel):
             #softmax_mask = boolean_softmax_mask.float().masked_fill_(boolean_softmax_mask, float("-inf"))
             #attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0) + softmax_mask, dim=1)
             
-            attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0)[:, 1:101], dim=1)
+            attention_weights = torch.nn.functional.softmax(attention_probs.sum(2).sum(2).mean(0)[:, 102:], dim=1)
             bsz, ts, hidden = sequence_output[0].size()
             vqa2_sensembed = (
-                    (torch.stack(sequence_output[-4:], dim=0).sum(0)[:, 1:101, :] * 
+                    (torch.stack(sequence_output[-4:], dim=0).sum(0)[:, 102:, :] * 
                     attention_weights.unsqueeze(-1)).sum(1))  # w_ts_4l
 
             vqa2_pred = self.ans_classifier(vqa2_embed)
